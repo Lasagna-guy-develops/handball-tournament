@@ -1,16 +1,11 @@
+import sqlite3
 
-import mysql.connector 
+import mysql.connector
 
 #crear la conexión
 
 def connect():
-    conn = mysql.connector.connect(host = "localhost",
-                                    database = "HandBallCup",
-                                    user = "root",
-                                    password = "SQLroot1911"
-                                    )
-
-    
+    conn = sqlite3.connect("Handball_DB.sql")
     return conn
 
 def DBInsert(query, var):
