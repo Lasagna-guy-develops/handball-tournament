@@ -28,7 +28,7 @@ def login():
         print(request.form["email"] + "  :  "+ request.form["password"] + "\n" + hashPasswd(request.form["password"]))
         inputName = request.form["email"]
         if inputName == "admin":
-            if hashPasswd(request.form["password"]) == "04ec614eed673d26b74660602044740195302cce31372a6c7ac9dd155f58df91":
+            if hashPasswd(request.form["password"]) == "ac9689e2272427085e35b9d3e3e8bed88cb3434828b43b86fc0596cad4c6e270":
                 session["user"] = "admin"
                 return render_template("admin_home.html")
 
@@ -49,7 +49,7 @@ def login():
                 if inputPassHash == dic["PassHash"]:
                     loggedIn = True
                     session["user"] = str(dic["CoachKey"])
-                    infoCoach = sql_query('''SELECT FirstName, LastName, EPS, ID, IDType FROM Coach WHERE CoachKey = "''' + session["user"] + '''";''')[0]
+                    infoCoach = sql_query('SELECT FirstName, LastName, EPS, ID, IDType FROM Coach WHERE CoachKey = "' + session["user"] + '";')[0]
             if loggedIn:
                 CoachHasNoInfo = False
                 print("Bienvenido " + session["user"])
