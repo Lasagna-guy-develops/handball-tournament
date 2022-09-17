@@ -1,16 +1,16 @@
 
-import mysql.connector 
+import mysql.connector
 
 #crear la conexión
 
 def connect():
     conn = mysql.connector.connect(host = "localhost",
-                                    database = "HandBallCup",
-                                    user = "root",
-                                    password = "SQLroot1911"
-                                    )
+                                database = "HandBallCup",
+                                user = "HandballApp",
+                                password = "handball1234",
+                                port = 3306
+                                )
 
-    
     return conn
 
 def DBInsert(query, var):

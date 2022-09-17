@@ -1,4 +1,5 @@
 
+from ipaddress import ip_address
 from flask import Flask, request, redirect, render_template, session, redirect
 
 from functions.DataBaseConnection import connect, DBInsert, sql_delete,sql_edit,sql_query_var, sql_query, getIDTypes, getCategories
@@ -695,5 +696,5 @@ if __name__ == "__main__":
     
     app.secret_key = random_key()
     print(app.secret_key)
-    app.run(debug= True )
+    app.run(debug= True, host="0.0.0.0")
 

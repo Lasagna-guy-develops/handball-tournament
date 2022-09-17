@@ -111,4 +111,7 @@ VALUES("Cédula de ciudadanía"),
 ("Tarjeta Identidad"),
 ("Registro civil");
 
+INSERT INTO Coach(UserName, PassHash)
+VALUES("admin", "04ec614eed673d26b74660602044740195302cce31372a6c7ac9dd155f58df91");
+
 
