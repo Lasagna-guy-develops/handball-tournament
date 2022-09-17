@@ -671,12 +671,12 @@ def insertPlayer():
                                 AND ID LIKE %s
                                 AND DBirth LIKE %s;'''
                 playerKey = sql_query_var(playerKeyQuery, (FirstName[n], LastName[n], EPS[n], IDType[n], ID[n], DBirth[n]))[0]
-                updatePictureURL = ("UPDATE Player SET PictureURL = 'Uploaded/Players/" + str(playerKey["MAX(PlayerKey)"]) +"." +getExtension(photos[n].filename)+
+                updatePictureURL = ("UPDATE Player SET PictureURL = 'Uploaded/Players/" + str(photos[n].filename)+
                                     "' WHERE PlayerKey = "+str(playerKey["MAX(PlayerKey)"]) +";")
                 
                 sql_edit(updatePictureURL, None)
 
-                photos[n].save("Uploaded/Players/" +  str(playerKey["MAX(PlayerKey)"]) +"."+ getExtension(photos[n].filename))
+                photos[n].save("Uploaded/Players/" +  str(photos[n].filename))
                 
 
 
