@@ -1,5 +1,3 @@
-
-from ipaddress import ip_address
 from flask import Flask, request, redirect, render_template, session, redirect
 
 from functions.DataBaseConnection import connect, DBInsert, sql_delete,sql_edit,sql_query_var, sql_query, getIDTypes, getCategories
@@ -20,7 +18,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def sql_database():
-    
+
     return render_template('index.html', failedAttempt = False)   
 
 @app.route('/login', methods = ['POST', 'GET'])
@@ -28,60 +26,53 @@ def login():
     if request.method == 'POST':
         print(request.form["email"] + "  :  "+ request.form["password"] + "\n" + hashPasswd(request.form["password"]))
         inputName = request.form["email"]
-        if inputName == "admin":
-            if hashPasswd(request.form["password"]) == "ac9689e2272427085e35b9d3e3e8bed88cb3434828b43b86fc0596cad4c6e270":
-                session["user"] = "admin"
-                return render_template("admin_home.html")
 
-            else:
-                return render_template('index.html', failedAttempt = True)
+        passwdHash = hashPasswd(request.form["password"])
+        usersQuery = '''SELECT CoachKey FROM Coach
+                            WHERE UserName like "'''+ inputName+'" AND PassHash like "'\
+                                +passwdHash+'";'
 
-            
+        user = sql_query(usersQuery)
+
+        if len(user) == 0:
+            return render_template('index.html', failedAttempt = True)
+        
+        if user[0]["CoachKey"] == 0:
+            session["user"] = "admin"
+            return render_template("admin_home.html")
+        
         else:
-            passwdsQuery = '''SELECT CoachKey, PassHash FROM Coach
-                            WHERE UserName like %s'''
-            
-            print (inputName)
-            inputPassHash = hashPasswd(request.form["password"])
-            storedhashes = sql_query_var(passwdsQuery, (inputName,))
-            print (storedhashes)
-            loggedIn = False
-            for dic in storedhashes:
-                if inputPassHash == dic["PassHash"]:
-                    loggedIn = True
-                    session["user"] = str(dic["CoachKey"])
-                    infoCoach = sql_query('SELECT FirstName, LastName, EPS, ID, IDType FROM Coach WHERE CoachKey = "' + session["user"] + '";')[0]
-            if loggedIn:
-                CoachHasNoInfo = False
-                print("Bienvenido " + session["user"])
-                for infop in infoCoach:
-                    if not CoachHasNoInfo:
-                        CoachHasNoInfo = infoCoach[infop] is None
-                        
-                        print(infop, infoCoach[infop])
+            session["user"] = str(user[0]["CoachKey"])
 
+            infoCoach = sql_query('SELECT FirstName, LastName, EPS, ID, IDType FROM Coach WHERE CoachKey = "' + session["user"] + '";')[0]
 
-
-                if CoachHasNoInfo:
-                    tiposID = getIDTypes()
-                    return render_template("info_entrenador.html", IDTypes = tiposID)
-                else: 
-                    print("ingresó un entrenador que tiene información")
-                    coachHasTeams = False
-                    coachNTeamsQuery = '''SELECT COUNT(CoachKey) AS '#Equipos' FROM Team WHERE CoachKey = ''' + session["user"]
-                    coachNTeams = sql_query(coachNTeamsQuery)[0]["#Equipos"]
-                    if coachNTeams > 0:
-                        coachHasTeams = True
+            CoachHasNoInfo = False
+            print("Bienvenido " + session["user"])
+            for infop in infoCoach:
+                if not CoachHasNoInfo:
+                    CoachHasNoInfo = infoCoach[infop] is None
                     
-                    if coachHasTeams:
-                        return redirect('/verJugadoresInscritos')
+                    print(infop, infoCoach[infop])
 
-                        
-                    else:
-                        return render_template("info_equipos.html")
-            
-            else:
-                return render_template("index.html", failedAttempt = True)
+
+
+            if CoachHasNoInfo:
+                tiposID = getIDTypes()
+                return render_template("info_entrenador.html", IDTypes = tiposID)
+            else: 
+                print("ingresó un entrenador que tiene información")
+                coachHasTeams = False
+                coachNTeamsQuery = '''SELECT COUNT(CoachKey) AS '#Equipos' FROM Team WHERE CoachKey = ''' + session["user"]
+                coachNTeams = sql_query(coachNTeamsQuery)[0]["#Equipos"]
+                if coachNTeams > 0:
+                    coachHasTeams = True
+                
+                if coachHasTeams:
+                    return redirect('/verJugadoresInscritos')
+
+                    
+                else:
+                    return render_template("info_equipos.html")
 
 
 

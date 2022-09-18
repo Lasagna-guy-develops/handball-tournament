@@ -112,6 +112,8 @@ VALUES("Cédula de ciudadanía"),
 ("Registro civil");
 
 INSERT INTO Coach(UserName, PassHash)
-VALUES("admin", "04ec614eed673d26b74660602044740195302cce31372a6c7ac9dd155f58df91");
+VALUES("admin", "ac9689e2272427085e35b9d3e3e8bed88cb3434828b43b86fc0596cad4c6e270");
+
+UPDATE Coach SET CoachKey = 0 WHERE UserName like "admin";
 
 
